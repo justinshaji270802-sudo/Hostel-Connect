@@ -390,3 +390,4 @@ class MaintenanceRequest(models.Model):
 
     def __str__(self):
         return f"Maintenance - {self.room.room_number}"
+
