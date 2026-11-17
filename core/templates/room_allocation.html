@@ -1,0 +1,475 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Room Allocation - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .allocation-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 35px 20px 50px;
+        color: #1e293b;
+    }
+
+    .allocation-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .allocation-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: 28px;
+        font-weight: 750;
+        letter-spacing: -0.6px;
+    }
+
+    .allocation-subtitle {
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .allocation-header-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        flex-shrink: 0;
+        border-radius: 15px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 23px;
+    }
+
+    .allocation-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.75fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .allocation-card {
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        border-radius: 15px;
+        background: #ffffff;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.035);
+    }
+
+    .allocation-card-header {
+        padding: 23px 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .allocation-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .allocation-card-title i {
+        color: #2563eb;
+    }
+
+    .allocation-card-description {
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .allocation-card-body {
+        padding: 25px;
+    }
+
+    .allocation-form-group {
+        margin-bottom: 22px;
+    }
+
+    .allocation-form-group label {
+        display: block;
+        margin-bottom: 9px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .allocation-form-group select,
+    .allocation-form-group input {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 13px;
+        border: 1px solid #dbe3ee;
+        border-radius: 9px;
+        outline: none;
+        background: #ffffff;
+        color: #1e293b;
+        font-family: inherit;
+        font-size: 13px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .allocation-form-group select:focus,
+    .allocation-form-group input:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.11);
+    }
+
+    .allocation-errors {
+        margin: 0 0 20px;
+        padding: 13px 16px;
+        border: 1px solid #fecaca;
+        border-radius: 9px;
+        background: #fef2f2;
+        color: #b91c1c;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .allocation-errors ul {
+        margin: 5px 0 0;
+        padding-left: 20px;
+    }
+
+    .allocation-field-error {
+        margin: 7px 0 0;
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .allocation-submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        width: 100%;
+        min-height: 47px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 9px;
+        background: #2563eb;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .allocation-submit:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .allocation-submit:disabled {
+        opacity: 0.7;
+        cursor: wait;
+        transform: none;
+    }
+
+    .allocation-info {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        padding: 18px;
+        border: 1px solid #dbeafe;
+        border-radius: 11px;
+        background: #f8fbff;
+    }
+
+    .allocation-info-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 37px;
+        height: 37px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .allocation-info h3 {
+        margin: 1px 0 7px;
+        color: #1e3a8a;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .allocation-info p {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .allocation-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        margin-top: 24px;
+    }
+
+    .allocation-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+    }
+
+    .allocation-step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .allocation-step h4 {
+        margin: 2px 0 5px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .allocation-step p {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .allocation-messages {
+        margin-bottom: 20px;
+    }
+
+    .allocation-message {
+        margin-bottom: 10px;
+        padding: 13px 16px;
+        border: 1px solid #bbf7d0;
+        border-radius: 9px;
+        background: #f0fdf4;
+        color: #166534;
+        font-size: 13px;
+    }
+
+    .allocation-message.error {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    @media (max-width: 760px) {
+        .allocation-page {
+            padding: 25px 14px 35px;
+        }
+
+        .allocation-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .allocation-title {
+            font-size: 23px;
+        }
+
+        .allocation-header-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 19px;
+        }
+
+        .allocation-card-header,
+        .allocation-card-body {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="allocation-page">
+
+    <div class="allocation-header">
+        <div>
+            <h1 class="allocation-title">Room Allocation</h1>
+            <p class="allocation-subtitle">
+                Assign hostel rooms to students and manage room occupancy.
+            </p>
+        </div>
+
+        <div class="allocation-header-icon">
+            <i class="fas fa-bed"></i>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="allocation-messages">
+            {% for message in messages %}
+                <div class="allocation-message {% if message.tags == 'error' %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="allocation-layout">
+
+        <section class="allocation-card">
+
+            <div class="allocation-card-header">
+                <h2 class="allocation-card-title">
+                    <i class="fas fa-user-plus"></i>
+                    Assign a Room
+                </h2>
+                <p class="allocation-card-description">
+                    Select a student and a room to submit the allocation.
+                </p>
+            </div>
+
+            <div class="allocation-card-body">
+
+                <form method="post" action="{% url 'room_allocation' %}" id="roomAllocationForm">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="allocation-errors">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="allocation-form-group">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <p class="allocation-card-description">
+                                    {{ field.help_text }}
+                                </p>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="allocation-field-error">{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+                    {% endfor %}
+
+                    {% if form.errors and not form.non_field_errors %}
+                        <div class="allocation-errors">
+                            Please correct the errors above before submitting.
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="allocation-submit" id="allocationSubmit">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Allocate Room</span>
+                    </button>
+
+                </form>
+
+            </div>
+        </section>
+
+        <aside class="allocation-card">
+
+            <div class="allocation-card-header">
+                <h2 class="allocation-card-title">
+                    <i class="fas fa-info-circle"></i>
+                    Allocation Guide
+                </h2>
+                <p class="allocation-card-description">
+                    Follow these steps when assigning a hostel room.
+                </p>
+            </div>
+
+            <div class="allocation-card-body">
+
+                <div class="allocation-info">
+                    <div class="allocation-info-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+
+                    <div>
+                        <h3>Before you allocate</h3>
+                        <p>
+                            Make sure the student profile exists and the selected room
+                            has sufficient capacity for the allocation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="allocation-steps">
+
+                    <div class="allocation-step">
+                        <div class="allocation-step-number">01</div>
+                        <div>
+                            <h4>Select a student</h4>
+                            <p>Choose the student who needs hostel accommodation.</p>
+                        </div>
+                    </div>
+
+                    <div class="allocation-step">
+                        <div class="allocation-step-number">02</div>
+                        <div>
+                            <h4>Select a room</h4>
+                            <p>Choose the appropriate room from the available options.</p>
+                        </div>
+                    </div>
+
+                    <div class="allocation-step">
+                        <div class="allocation-step-number">03</div>
+                        <div>
+                            <h4>Confirm allocation</h4>
+                            <p>Submit the form to run your existing allocation process.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("roomAllocationForm");
+        const submitButton = document.getElementById("allocationSubmit");
+
+        if (form && submitButton) {
+            form.addEventListener("submit", function () {
+                if (form.checkValidity()) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML =
+                        '<i class="fas fa-spinner fa-spin"></i><span>Processing...</span>';
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

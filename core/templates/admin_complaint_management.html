@@ -1,0 +1,139 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Complaint Management - Hostel Connect{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="container">
+
+        <div class="page-header">
+            <h1><i class="fas fa-tasks"></i> Admin Complaint Management</h1>
+            <p>Manage and resolve student complaints</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> All Complaints</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Student</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for complaint in complaints %}
+                            <tr>
+                                <td><strong>{{ complaint.subject }}</strong></td>
+
+                                <td>
+                                    {{ complaint.student.user.get_full_name|default:complaint.student.user.username }}
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ complaint.get_category_display|default:complaint.category }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge
+                                        {% if complaint.priority == 'high' %}bg-danger
+                                        {% elif complaint.priority == 'medium' %}bg-warning text-dark
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ complaint.get_priority_display|default:complaint.priority|title }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {% if complaint.status == 'pending' %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif complaint.status == 'in_progress' %}
+                                        <span class="badge bg-info text-dark">In Progress</span>
+                                    {% elif complaint.status == 'resolved' %}
+                                        <span class="badge bg-success">Resolved</span>
+                                    {% elif complaint.status == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {{ complaint.get_status_display|default:complaint.status }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+
+                                <td>
+                                    {% if complaint.status != 'resolved' and complaint.status != 'rejected' %}
+                                    <form method="POST"
+                                          action=""
+                                          style="display: flex; align-items: center; gap: 6px;">
+                                        {% csrf_token %}
+
+                                        <input type="hidden"
+                                               name="complaint_id"
+                                               value="{{ complaint.id }}">
+
+                                        <select name="status"
+                                                class="form-select form-select-sm"
+                                                style="width: 130px;"
+                                                required>
+                                            <option value="pending"
+                                                {% if complaint.status == 'pending' %}selected{% endif %}>
+                                                Pending
+                                            </option>
+
+                                            <option value="in_progress"
+                                                {% if complaint.status == 'in_progress' %}selected{% endif %}>
+                                                In Progress
+                                            </option>
+
+                                            <option value="resolved"
+                                                {% if complaint.status == 'resolved' %}selected{% endif %}>
+                                                Resolved
+                                            </option>
+
+                                            <option value="rejected"
+                                                {% if complaint.status == 'rejected' %}selected{% endif %}>
+                                                Rejected
+                                            </option>
+                                        </select>
+
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-check"></i> Update
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                        <span class="text-muted">Completed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    No complaints found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

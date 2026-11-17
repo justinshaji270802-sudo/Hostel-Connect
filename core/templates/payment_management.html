@@ -1,0 +1,804 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Payment Management - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .payment-page {
+        max-width: 1250px;
+        margin: 35px auto;
+        padding: 0 18px 40px;
+    }
+
+    .payment-header {
+        margin-bottom: 25px;
+    }
+
+    .payment-header h1 {
+        font-size: 28px;
+        font-weight: 750;
+        color: #172554;
+        margin-bottom: 7px;
+    }
+
+    .payment-header p {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .payment-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .payment-stat {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+    }
+
+    .payment-stat .stat-label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 9px;
+    }
+
+    .payment-stat .stat-value {
+        color: #172554;
+        font-size: 25px;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .payment-stat .stat-icon {
+        color: #2563eb;
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .payment-section {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 23px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+    }
+
+    .payment-section h2 {
+        font-size: 19px;
+        font-weight: 700;
+        color: #172554;
+        margin-bottom: 18px;
+    }
+
+    .payment-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 17px;
+    }
+
+    .payment-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .payment-field.full {
+        grid-column: 1 / -1;
+    }
+
+    .payment-field label {
+        font-size: 13px;
+        font-weight: 650;
+        color: #334155;
+    }
+
+    .payment-field input,
+    .payment-field select {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        color: #1e293b;
+        outline: none;
+    }
+
+    .payment-field input:focus,
+    .payment-field select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .payment-field select[multiple] {
+        min-height: 145px;
+    }
+
+    .payment-field select:disabled {
+        background: #f1f5f9;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    .payment-help {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.5;
+    }
+
+    .payment-button {
+        border: 0;
+        border-radius: 8px;
+        padding: 11px 18px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 650;
+        cursor: pointer;
+    }
+
+    .payment-button:hover {
+        background: #1d4ed8;
+    }
+
+    .payment-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .payment-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 850px;
+    }
+
+    .payment-table th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        padding: 13px 12px;
+        border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    .payment-table td {
+        padding: 13px 12px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 13px;
+        vertical-align: middle;
+    }
+
+    .payment-table tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .payment-status {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-paid {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-pending {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .status-partial {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-unassigned {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .record-payment-form {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 260px;
+    }
+
+    .record-payment-form input,
+    .record-payment-form select {
+        min-width: 85px;
+        padding: 7px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+
+    .record-payment-form button {
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: white;
+        padding: 8px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .record-payment-form button:hover {
+        background: #1d4ed8;
+    }
+
+    .empty-payment {
+        text-align: center;
+        color: #64748b;
+        padding: 25px !important;
+    }
+
+    .payment-section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 17px;
+    }
+
+    .payment-section-heading h2 {
+        margin: 0;
+    }
+
+    .payment-count {
+        color: #64748b;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .payment-notice {
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #1e40af;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 650px) {
+        .payment-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .payment-field.full {
+            grid-column: auto;
+        }
+
+        .payment-section {
+            padding: 16px;
+        }
+
+        .payment-header h1 {
+            font-size: 23px;
+        }
+
+        .payment-section-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="payment-page">
+
+    <div class="payment-header">
+        <h1><i class="fas fa-money-check-alt"></i> Payment Management</h1>
+        <p>Assign student fees, record payments and monitor outstanding balances.</p>
+    </div>
+
+    <div class="payment-stats">
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+            <div class="stat-label">Total Payments</div>
+            <div class="stat-value">{{ total_transactions }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+            <div class="stat-label">Total Payment Received</div>
+            <div class="stat-value">₹{{ total_received|floatformat:2 }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+            <div class="stat-label">Total Fees Assigned</div>
+            <div class="stat-value">₹{{ total_assigned|floatformat:2 }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-label">Pending Amount</div>
+            <div class="stat-value">₹{{ total_outstanding|floatformat:2 }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-label">Fully Paid Students</div>
+            <div class="stat-value">{{ paid_count }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-label">Students With Pending Fees</div>
+            <div class="stat-value">{{ unpaid_count }}</div>
+        </div>
+
+        <div class="payment-stat">
+            <div class="stat-icon"><i class="fas fa-user-clock"></i></div>
+            <div class="stat-label">Students Without Assigned Fees</div>
+            <div class="stat-value">{{ unassigned_count }}</div>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-history"></i> Payment History</h2>
+            <span class="payment-count">{{ payment_history_count }} transactions</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Fee / Description</th>
+                        <th>Amount Paid</th>
+                        <th>Payment Method</th>
+                        <th>Payment Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for payment in payment_history %}
+                        <tr>
+                            <td>
+                                {{ payment.student.user.get_full_name|default:payment.student.user.username }}
+                            </td>
+
+                            <td>{{ payment.student.student_id|default:"-" }}</td>
+
+                            <td>
+                                {% if payment.fee_charge %}
+                                    {{ payment.fee_charge.title }}
+                                {% elif payment.rent_charge %}
+                                    Hostel Rent
+                                {% else %}
+                                    {{ payment.description|default:"Other Payment" }}
+                                {% endif %}
+                            </td>
+
+                            <td>₹{{ payment.amount|floatformat:2 }}</td>
+
+                            <td>{{ payment.get_payment_method_display }}</td>
+
+                            <td>{{ payment.payment_date|date:"d M Y, h:i A" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-payment">
+                                No payment transactions have been recorded yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <h2><i class="fas fa-plus-circle"></i> Assign New Fee</h2>
+
+        <div class="payment-notice">
+            Select All Students to assign the fee to everyone, or choose Selected Students to assign it only to specific students.
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="assign_fee">
+
+            <div class="payment-form-grid">
+
+                <div class="payment-field">
+                    <label for="title">Fee Name</label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        maxlength="200"
+                        placeholder="Example: November Hostel Rent"
+                        required
+                    >
+                </div>
+
+                <div class="payment-field">
+                    <label for="fee_type">Fee Category</label>
+                    <select id="fee_type" name="fee_type" required>
+                        <option value="hostel_rent">Hostel Rent</option>
+                        <option value="tuition">Tuition Fee</option>
+                        <option value="admission">Admission Fee</option>
+                        <option value="mess">Mess Fee</option>
+                        <option value="maintenance">Maintenance Fee</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="payment-field">
+                    <label for="amount">Amount (₹)</label>
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="Enter amount"
+                        required
+                    >
+                </div>
+
+                <div class="payment-field">
+                    <label for="due_date">Due Date</label>
+                    <input
+                        type="date"
+                        id="due_date"
+                        name="due_date"
+                        min="{% now 'Y-m-d' %}"
+                        required
+                    >
+                </div>
+
+                <div class="payment-field">
+                    <label for="student_scope">Assign Fee To</label>
+                    <select id="student_scope" name="student_scope" required>
+                        <option value="all">All Students</option>
+                        <option value="selected">Selected Students</option>
+                    </select>
+                </div>
+
+                <div class="payment-field">
+                    <label for="students">Select Students</label>
+                    <select
+                        id="students"
+                        name="students"
+                        multiple
+                        disabled
+                    >
+                        {% for student in students %}
+                            <option value="{{ student.id }}">
+                                {{ student.user.get_full_name|default:student.user.username }}
+                                - {{ student.student_id }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <span class="payment-help">
+                        Choose Selected Students above to enable this field. Hold Ctrl (Windows) or Command (Mac) to select multiple students.
+                    </span>
+                </div>
+
+                <div class="payment-field full">
+                    <button type="submit" class="payment-button">
+                        <i class="fas fa-plus"></i> Assign Fee
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-users"></i> Student Payment Status</h2>
+            <span class="payment-count">{{ total_students }} students</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Total Assigned</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in students_summary %}
+                        <tr>
+                            <td>{{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+                            <td>{{ item.student.student_id|default:"-" }}</td>
+                            <td>₹{{ item.assigned|floatformat:2 }}</td>
+                            <td>₹{{ item.paid|floatformat:2 }}</td>
+                            <td>₹{{ item.balance|floatformat:2 }}</td>
+
+                            <td>
+                                {% if not item.has_fees %}
+                                    <span class="payment-status status-unassigned">No Fee Assigned</span>
+                                {% elif item.balance <= 0 %}
+                                    <span class="payment-status status-paid">Paid</span>
+                                {% else %}
+                                    <span class="payment-status status-pending">Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-payment">No students found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-file-invoice"></i> Assigned Fees</h2>
+            <span class="payment-count">{{ fee_charges|length }} fee records</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Fee</th>
+                        <th>Category</th>
+                        <th>Due Date</th>
+                        <th>Assigned</th>
+                        <th>Received</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Record Payment</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for charge in fee_charges %}
+                        <tr>
+                            <td>{{ charge.student.user.get_full_name|default:charge.student.user.username }}</td>
+                            <td>{{ charge.title }}</td>
+                            <td>{{ charge.get_fee_type_display }}</td>
+                            <td>{{ charge.due_date|date:"d M Y" }}</td>
+                            <td>₹{{ charge.amount|floatformat:2 }}</td>
+                            <td>₹{{ charge.assigned_paid_amount|floatformat:2 }}</td>
+                            <td>₹{{ charge.assigned_balance|floatformat:2 }}</td>
+
+                            <td>
+                                {% if charge.payment_status == "paid" %}
+                                    <span class="payment-status status-paid">Paid</span>
+                                {% elif charge.payment_status == "partial" %}
+                                    <span class="payment-status status-partial">Partially Paid</span>
+                                {% else %}
+                                    <span class="payment-status status-pending">Unpaid</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if charge.payment_status != "paid" %}
+                                    <form
+                                        method="POST"
+                                        class="record-payment-form"
+                                        onsubmit="return confirm('Are you sure you want to record this payment?');"
+                                    >
+                                        {% csrf_token %}
+
+                                        <input type="hidden" name="action" value="record_payment">
+                                        <input type="hidden" name="fee_charge_id" value="{{ charge.id }}">
+
+                                        <input
+                                            type="number"
+                                            name="payment_amount"
+                                            min="0.01"
+                                            max="{{ charge.assigned_balance }}"
+                                            step="0.01"
+                                            placeholder="Amount"
+                                            required
+                                        >
+
+                                        <select name="payment_method" required>
+                                            <option value="cash">Cash</option>
+                                            <option value="card">Card</option>
+                                            <option value="online">Online</option>
+                                            <option value="other">Other</option>
+                                        </select>
+
+                                        <button type="submit">Record</button>
+                                    </form>
+                                {% else %}
+                                    <span class="payment-status status-paid">Completed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="empty-payment">
+                                No fees have been assigned yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-check-circle"></i> Students Who Have Paid</h2>
+            <span class="payment-count">{{ paid_count }} students</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Total Assigned</th>
+                        <th>Total Paid</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in paid_students %}
+                        <tr>
+                            <td>{{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+                            <td>{{ item.student.student_id|default:"-" }}</td>
+                            <td>₹{{ item.assigned|floatformat:2 }}</td>
+                            <td>₹{{ item.paid|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-payment">
+                                No students have completed their assigned fees yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-exclamation-circle"></i> Students With Pending Payments</h2>
+            <span class="payment-count">{{ unpaid_count }} students</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Total Assigned</th>
+                        <th>Total Paid</th>
+                        <th>Pending Balance</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in unpaid_students %}
+                        <tr>
+                            <td>{{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+                            <td>{{ item.student.student_id|default:"-" }}</td>
+                            <td>₹{{ item.assigned|floatformat:2 }}</td>
+                            <td>₹{{ item.paid|floatformat:2 }}</td>
+                            <td>₹{{ item.balance|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-payment">
+                                No students have pending assigned fees.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="payment-section">
+
+        <div class="payment-section-heading">
+            <h2><i class="fas fa-user-clock"></i> Students Without Assigned Fees</h2>
+            <span class="payment-count">{{ unassigned_count }} students</span>
+        </div>
+
+        <div class="payment-table-wrap">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in unassigned_students %}
+                        <tr>
+                            <td>{{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+                            <td>{{ item.student.student_id|default:"-" }}</td>
+                            <td>
+                                <span class="payment-status status-unassigned">No Fee Assigned</span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3" class="empty-payment">
+                                All students have at least one fee assignment.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const studentScope = document.getElementById("student_scope");
+        const studentsSelect = document.getElementById("students");
+
+        function updateStudentSelection() {
+            const selectedStudents = studentScope.value === "selected";
+
+            studentsSelect.disabled = !selectedStudents;
+            studentsSelect.required = selectedStudents;
+
+            if (!selectedStudents) {
+                Array.from(studentsSelect.options).forEach(function (option) {
+                    option.selected = false;
+                });
+            }
+        }
+
+        studentScope.addEventListener("change", updateStudentSelection);
+
+        updateStudentSelection();
+    });
+</script>
+
+{% endblock %}

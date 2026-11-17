@@ -1,0 +1,76 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Available Rooms - Hostel Connect{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="container">
+
+        <div class="page-header">
+            <h1><i class="fas fa-bed"></i> Available Rooms</h1>
+            <p>View hostel rooms that currently have available beds.</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-list"></i> Currently Available Rooms</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Hostel Block</th>
+                                <th>Location</th>
+                                <th>Department</th>
+                                <th>Floor</th>
+                                <th>Room Number</th>
+                                <th>Room Type</th>
+                                <th>Occupancy</th>
+                                <th>Available Beds</th>
+                                <th>Monthly Rent</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for room in rooms %}
+                                {% if room.available_beds > 0 %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ room.block.name }}</td>
+                                    <td>{{ room.block.location }}</td>
+                                    <td>{{ room.get_department_display }}</td>
+                                    <td>{{ room.floor_number }}</td>
+                                    <td>{{ room.room_number }}</td>
+                                    <td>{{ room.get_room_type_display }}</td>
+                                    <td>{{ room.occupied }}/{{ room.capacity }}</td>
+                                    <td>{{ room.available_beds }}</td>
+                                    <td>₹{{ room.rent }}</td>
+                                    <td>
+                                        <span class="badge badge-success">
+                                            Available
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="11" class="text-center">
+                                        No rooms are currently available.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

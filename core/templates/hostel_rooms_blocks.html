@@ -1,0 +1,139 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hostel Rooms & Blocks - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .management-page {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    .management-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .management-header h1 {
+        color: #243247;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .management-header p {
+        color: #6c757d;
+    }
+
+    .management-card {
+        height: 100%;
+        padding: 35px 25px;
+        text-align: center;
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
+    }
+
+    .management-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .management-icon {
+        font-size: 45px;
+        margin-bottom: 20px;
+        color: #0d6efd;
+    }
+
+    .management-card h3 {
+        color: #243247;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .management-card p {
+        color: #6c757d;
+        min-height: 48px;
+    }
+
+    .management-card .btn {
+        margin-top: 15px;
+        padding: 10px 24px;
+    }
+
+    .management-back {
+        text-align: center;
+        margin-top: 30px;
+    }
+</style>
+
+<div class="management-page">
+
+    <div class="management-header">
+        <h1>
+            <i class="fas fa-building"></i>
+            Hostel Rooms & Blocks
+        </h1>
+
+        <p>
+            Manage hostel blocks and register rooms from one place.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card management-card">
+                <div class="management-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+
+                <h3>Add Hostel Block</h3>
+
+                <p>
+                    Create a hostel block and specify its location
+                    and number of floors.
+                </p>
+
+                <a href="{% url 'add_block' %}"
+                   class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Block
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card management-card">
+                <div class="management-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+
+                <h3>Add Hostel Room</h3>
+
+                <p>
+                    Register a room and select its block,
+                    department, floor, capacity, and rent.
+                </p>
+
+                <a href="{% url 'add_room' %}"
+                   class="btn btn-success">
+                    <i class="fas fa-plus"></i> Add Room
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="management-back">
+        <a href="{% url 'admin_dashboard' %}"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,514 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notice Board - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .notice-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 35px 20px 50px;
+        color: #1e293b;
+    }
+
+    .notice-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .notice-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: 28px;
+        font-weight: 750;
+        letter-spacing: -0.6px;
+    }
+
+    .notice-subtitle {
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .notice-header-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        flex-shrink: 0;
+        border-radius: 15px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 23px;
+    }
+
+    .notice-messages {
+        margin-bottom: 22px;
+    }
+
+    .notice-message {
+        margin-bottom: 10px;
+        padding: 13px 16px;
+        border: 1px solid #bbf7d0;
+        border-radius: 9px;
+        background: #f0fdf4;
+        color: #166534;
+        font-size: 13px;
+    }
+
+    .notice-message.error {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .notice-panel {
+        overflow: hidden;
+        margin-bottom: 25px;
+        border: 1px solid #e2e8f0;
+        border-radius: 15px;
+        background: #ffffff;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.035);
+    }
+
+    .notice-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 22px 25px;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .notice-panel-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .notice-panel-title i {
+        color: #2563eb;
+    }
+
+    .notice-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 28px;
+        padding: 0 9px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .notice-form-body {
+        padding: 25px;
+    }
+
+    .notice-form-group {
+        margin-bottom: 20px;
+    }
+
+    .notice-form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .notice-form-control {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        background: #fff;
+        color: #0f172a;
+        font: inherit;
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .notice-form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    textarea.notice-form-control {
+        min-height: 130px;
+        resize: vertical;
+        line-height: 1.7;
+    }
+
+    .notice-checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #475569;
+        font-size: 13px;
+    }
+
+    .notice-checkbox-row input {
+        width: 16px;
+        height: 16px;
+        accent-color: #2563eb;
+    }
+
+    .notice-publish-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 12px 19px;
+        border: none;
+        border-radius: 9px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 650;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .notice-publish-button:hover {
+        background: #1d4ed8;
+    }
+
+    .notice-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .notice-item {
+        padding: 24px 25px;
+        border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+
+    .notice-item:last-child {
+        border-bottom: none;
+    }
+
+    .notice-item:hover {
+        background: #fcfdff;
+    }
+
+    .notice-item.important {
+        border-left: 3px solid #ef4444;
+        background: #fffdfd;
+    }
+
+    .notice-item-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 12px;
+    }
+
+    .notice-item-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 0;
+        color: #0f172a;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .notice-important-icon {
+        margin-top: 3px;
+        color: #dc2626;
+    }
+
+    .notice-important-badge {
+        flex-shrink: 0;
+        padding: 5px 9px;
+        border: 1px solid #fecaca;
+        border-radius: 7px;
+        background: #fef2f2;
+        color: #b91c1c;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+    }
+
+    .notice-date {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 14px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .notice-content {
+        margin: 0;
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.9;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    .notice-footer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid #f1f5f9;
+        color: #94a3b8;
+        font-size: 11px;
+    }
+
+    .notice-footer i {
+        color: #64748b;
+    }
+
+    .notice-empty {
+        padding: 55px 20px;
+        text-align: center;
+    }
+
+    .notice-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 16px;
+        border-radius: 16px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        font-size: 23px;
+    }
+
+    .notice-empty-title {
+        margin: 0 0 7px;
+        color: #334155;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .notice-empty-text {
+        margin: 0;
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .notice-field-error {
+        margin-top: 6px;
+        color: #b91c1c;
+        font-size: 12px;
+    }
+
+    @media (max-width: 640px) {
+        .notice-page {
+            padding: 25px 14px 35px;
+        }
+
+        .notice-title {
+            font-size: 23px;
+        }
+
+        .notice-header-icon {
+            width: 45px;
+            height: 45px;
+            font-size: 19px;
+        }
+
+        .notice-panel-header {
+            padding: 19px;
+        }
+
+        .notice-form-body {
+            padding: 19px;
+        }
+
+        .notice-item {
+            padding: 20px 18px;
+        }
+
+        .notice-item-header {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<div class="notice-page">
+
+    <div class="notice-header">
+        <div>
+            <h1 class="notice-title">Notice Board</h1>
+            <p class="notice-subtitle">
+                Stay informed about hostel announcements and important updates.
+            </p>
+        </div>
+
+        <div class="notice-header-icon">
+            <i class="fas fa-bullhorn"></i>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="notice-messages">
+            {% for message in messages %}
+                <div class="notice-message {% if 'error' in message.tags %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if is_staff_user %}
+        <section class="notice-panel">
+            <div class="notice-panel-header">
+                <h2 class="notice-panel-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Publish a Notice
+                </h2>
+            </div>
+
+            <div class="notice-form-body">
+                <form method="post" action="{% url 'notice_board' %}">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="notice-message error">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="notice-form-group">
+                        <label for="{{ form.title.id_for_label }}">Notice Title</label>
+                        <input
+                            type="text"
+                            name="{{ form.title.html_name }}"
+                            id="{{ form.title.id_for_label }}"
+                            class="notice-form-control"
+                            value="{{ form.title.value|default_if_none:'' }}"
+                            required
+                        >
+                        {% for error in form.title.errors %}
+                            <div class="notice-field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="notice-form-group">
+                        <label for="{{ form.content.id_for_label }}">Notice Content</label>
+                        <textarea
+                            name="{{ form.content.html_name }}"
+                            id="{{ form.content.id_for_label }}"
+                            class="notice-form-control"
+                            rows="5"
+                            required
+                        >{{ form.content.value|default_if_none:'' }}</textarea>
+                        {% for error in form.content.errors %}
+                            <div class="notice-field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="notice-form-group">
+                        <label class="notice-checkbox-row" for="{{ form.is_active.id_for_label }}">
+                            <input
+                                type="checkbox"
+                                name="{{ form.is_active.html_name }}"
+                                id="{{ form.is_active.id_for_label }}"
+                                {% if form.is_active.value %}checked{% endif %}
+                            >
+                            Publish this notice for students
+                        </label>
+                        {% for error in form.is_active.errors %}
+                            <div class="notice-field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="notice-publish-button">
+                        <i class="fas fa-paper-plane"></i>
+                        Publish Notice
+                    </button>
+                </form>
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="notice-panel">
+        <div class="notice-panel-header">
+            <h2 class="notice-panel-title">
+                <i class="fas fa-clipboard-list"></i>
+                All Notices
+            </h2>
+
+            <span class="notice-count">{{ notices|length }}</span>
+        </div>
+
+        <div class="notice-list">
+            {% for notice in notices %}
+                <article class="notice-item {% if notice.is_important %}important{% endif %}">
+                    <div class="notice-item-header">
+                        <h3 class="notice-item-title">
+                            {% if notice.is_important %}
+                                <i class="fas fa-exclamation-circle notice-important-icon"></i>
+                            {% endif %}
+                            {{ notice.title }}
+                        </h3>
+
+                        {% if notice.is_important %}
+                            <span class="notice-important-badge">Important</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="notice-date">
+                        <i class="far fa-clock"></i>
+                        <span>{{ notice.created_at|date:"M d, Y H:i" }}</span>
+                    </div>
+
+                    <p class="notice-content">{{ notice.content }}</p>
+
+                    <div class="notice-footer">
+                        <i class="fas fa-bell"></i>
+                        <span>Hostel Connect Announcement</span>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="notice-empty">
+                    <div class="notice-empty-icon">
+                        <i class="far fa-bell-slash"></i>
+                    </div>
+
+                    <h3 class="notice-empty-title">No notices available</h3>
+
+                    <p class="notice-empty-text">
+                        New hostel announcements will appear here when published.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

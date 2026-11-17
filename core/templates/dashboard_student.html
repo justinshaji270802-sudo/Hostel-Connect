@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard - Hostel Connect{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+
+                <!-- Header -->
+                <div class="card-header bg-primary text-white d-flex justify-content-end align-items-center">
+
+                    <!-- Logged-in Student Profile -->
+                    <div class="d-flex align-items-center">
+
+                        {% if student.profile_image %}
+                            <img src="{{ student.profile_image.url }}"
+                                 alt="Profile Photo"
+                                 style="width: 50px;
+                                        height: 50px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                        border: 2px solid white;
+                                        margin-right: 12px;">
+                        {% else %}
+                            <div style="width: 50px;
+                                        height: 50px;
+                                        border-radius: 50%;
+                                        background-color: white;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        margin-right: 12px;">
+                                <i class="fas fa-user"
+                                   style="font-size: 25px; color: #0d6efd;"></i>
+                            </div>
+                        {% endif %}
+
+                        <span style="font-size: 20px; font-weight: 600;">
+                            {{ student.user.get_full_name }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+
+                        <!-- Welcome Message -->
+                        <div class="col-12 mb-4">
+                            <div class="alert alert-success">
+                                <h5>
+                                    Welcome, {{ student.user.get_full_name }}! 
+                                </h5>
+
+                                <p class="mb-0">
+                                    Student ID:
+                                    <strong>{{ student.student_id }}</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Top Information Cards -->
+                    <div class="row"
+                         style="display: flex;
+                                flex-wrap: nowrap;
+                                width: 100%;">
+
+                        <!-- Room Info -->
+                        <div class="col-md-6 col-lg-3 mb-3"
+                             style="width: 25%;
+                                    flex: 0 0 25%;">
+
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body text-center">
+
+                                    <i class="fas fa-door-open mb-2"
+                                       style="font-size: 16px;"></i>
+
+                                    <h6>Room</h6>
+
+                                    <h4>
+                                        {% if room %}
+                                            {{ room.block.name }} -
+                                            {{ room.room_number }}
+                                        {% else %}
+                                            Not Allocated
+                                        {% endif %}
+                                    </h4>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Leave -->
+                        <div class="col-md-6 col-lg-3 mb-3"
+                             style="width: 25%;
+                                    flex: 0 0 25%;">
+
+                            <div class="card bg-warning text-dark h-100">
+                                <div class="card-body text-center">
+
+                                    <i class="fas fa-calendar-alt mb-2"
+                                       style="font-size: 16px;"></i>
+
+                                    <h6>Pending Leave</h6>
+
+                                    <h4>{{ pending_leave }}</h4>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Complaints -->
+                        <div class="col-md-6 col-lg-3 mb-3"
+                             style="width: 25%;
+                                    flex: 0 0 25%;">
+
+                            <div class="card bg-danger text-white h-100">
+                                <div class="card-body text-center">
+
+                                    <i class="fas fa-exclamation-triangle mb-2"
+                                       style="font-size: 16px;"></i>
+
+                                    <h6>Pending Complaints</h6>
+
+                                    <h4>{{ pending_complaint }}</h4>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notices -->
+                        <div class="col-md-6 col-lg-3 mb-3"
+                             style="width: 25%;
+                                    flex: 0 0 25%;">
+
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body text-center">
+
+                                    <i class="fas fa-bullhorn mb-2"
+                                       style="font-size: 16px;"></i>
+
+                                    <h6>New Notices</h6>
+
+                                    <h4>{{ notices|length }}</h4>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+
+                            <h5 class="mb-3">Quick Actions</h5>
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                <a href="{% url 'leave_management' %}"
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-calendar-plus me-1"></i>
+                                    Apply Leave
+                                </a>
+
+                                <a href="{% url 'complaint_tracking' %}"
+                                   class="btn btn-outline-danger">
+                                    <i class="fas fa-flag me-1"></i>
+                                    File Complaint
+                                </a>
+
+                                <a href="{% url 'fee_management' %}"
+                                   class="btn btn-outline-success">
+                                    <i class="fas fa-money-bill me-1"></i>
+                                    View Fees
+                                </a>
+
+                                <a href="{% url 'profile' %}"
+                                   class="btn btn-outline-info">
+                                    <i class="fas fa-user me-1"></i>
+                                    My Profile
+                                </a>
+
+                                <a href="{% url 'notice_board' %}"
+                                   class="btn btn-outline-warning">
+                                    <i class="fas fa-bullhorn me-1"></i>
+                                    Notice Board
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Leave Requests -->
+                    <div class="row mt-4">
+
+                        <div class="col-md-6">
+
+                            <!-- Same heading style as Quick Actions -->
+                            <h5 class="mb-3">Recent Leave Requests</h5>
+
+                            <div class="card">
+
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+
+                                        <table class="table table-sm table-striped mb-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>Start</th>
+                                                    <th>End</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                {% for leave in leave_requests %}
+
+                                                <tr>
+
+                                                    <td>
+                                                        {{ leave.start_date|date:"d M" }}
+                                                    </td>
+
+                                                    <td>
+                                                        {{ leave.end_date|date:"d M" }}
+                                                    </td>
+
+                                                    <td>
+
+                                                        {% if leave.status == 'pending' %}
+
+                                                            <span class="badge bg-warning text-dark">
+                                                                Pending
+                                                            </span>
+
+                                                        {% elif leave.status == 'approved' %}
+
+                                                            <span class="badge bg-success">
+                                                                Approved
+                                                            </span>
+
+                                                        {% else %}
+
+                                                            <span class="badge bg-danger">
+                                                                Rejected
+                                                            </span>
+
+                                                        {% endif %}
+
+                                                    </td>
+
+                                                </tr>
+
+                                                {% empty %}
+
+                                                <tr>
+                                                    <td colspan="3"
+                                                        class="text-center text-muted py-2">
+                                                        No leave requests
+                                                    </td>
+                                                </tr>
+
+                                                {% endfor %}
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Recent Complaints -->
+                        <div class="col-md-6">
+
+                            <div class="card">
+
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-3">Recent Complaints</h5>
+                                </div>
+
+                                <div class="card-body p-0">
+
+                                    <div class="table-responsive">
+
+                                        <table class="table table-sm table-striped mb-0">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>Subject</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+
+                                         <tbody>
+    {% for complaint in complaints %}
+    <tr>
+        <td>
+            {{ complaint.subject|truncatechars:30 }}
+        </td>
+
+        <td>
+            {% with status=complaint.status|lower %}
+                {% if status == 'pending' %}
+                    <span class="badge bg-warning text-dark">
+                        Pending
+                    </span>
+                {% elif status == 'in_progress' or status == 'in-progress' %}
+                    <span class="badge bg-info text-dark">
+                        In Progress
+                    </span>
+                {% elif status == 'resolved' %}
+                    <span class="badge bg-success">
+                        Resolved
+                    </span>
+                {% elif status == 'rejected' %}
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary">
+                        {{ complaint.get_status_display|default:complaint.status }}
+                    </span>
+                {% endif %}
+            {% endwith %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2" class="text-center text-muted py-3">
+            No complaints submitted yet.
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

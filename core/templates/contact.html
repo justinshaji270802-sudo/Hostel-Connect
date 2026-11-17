@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact - Hostel Connect{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1><i class="fas fa-envelope"></i> Contact Us</h1>
+            <p>Get in touch with the Hostel Connect team</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-card">
+                    <h3><i class="fas fa-map-marker-alt"></i> Address</h3>
+                    <p>123 Hostel Street,<br>University Campus,<br>City - 123456</p>
+                </div>
+                <div class="contact-card">
+                    <h3><i class="fas fa-phone"></i> Phone</h3>
+                    <p>+1 234 567 8900</p>
+                </div>
+                <div class="contact-card">
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>info@hostelconnect.com</p>
+                    <p>support@hostelconnect.com</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-paper-plane"></i> Send Us a Message</h3>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="name"><i class="fas fa-user"></i> Your Name</label>
+                                <input type="text" id="name" class="form-control" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject"><i class="fas fa-heading"></i> Subject</label>
+                                <input type="text" id="subject" class="form-control" placeholder="Enter subject">
+                            </div>
+                            <div class="form-group">
+                                <label for="message"><i class="fas fa-comment"></i> Message</label>
+                                <textarea id="message" class="form-control" rows="4" placeholder="Write your message"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

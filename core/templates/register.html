@@ -1,0 +1,625 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .registration-page {
+        min-height: calc(100vh - 80px);
+        padding: 35px 15px 45px;
+        background: #f5f7fb;
+    }
+
+    .registration-card {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 1px solid #e7eaf0;
+    }
+
+    .registration-header {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: white;
+        padding: 25px 30px;
+    }
+
+    .registration-header-content {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .registration-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.16);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .registration-header h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .registration-header p {
+        margin: 4px 0 0;
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .registration-body {
+        padding: 30px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 5px 0 18px;
+        padding-bottom: 9px;
+        border-bottom: 1px solid #e9ecef;
+        color: #263238;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .section-title i {
+        color: #0d6efd;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .form-control {
+        height: 43px;
+        border: 1px solid #d9dee7;
+        border-radius: 7px;
+        padding: 9px 12px;
+        font-size: 14px;
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.10);
+        outline: none;
+    }
+
+    textarea.form-control {
+        height: auto;
+        min-height: 85px;
+        resize: vertical;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8a94a6;
+        font-size: 14px;
+        pointer-events: none;
+    }
+
+    .input-wrapper .form-control {
+        padding-left: 38px;
+    }
+
+    .form-help {
+        display: block;
+        margin-top: 5px;
+        color: #7b8494;
+        font-size: 11px;
+    }
+
+    .error-box {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        color: #b42318;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 25px;
+        font-size: 13px;
+    }
+
+    .error-box strong {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .error-box ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 11px;
+        margin-top: 5px;
+    }
+
+    .register-button {
+        width: 100%;
+        height: 46px;
+        margin-top: 8px;
+        border: none;
+        border-radius: 7px;
+        background: #0d6efd;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .register-button:hover {
+        background: #0b5ed7;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(13, 110, 253, 0.20);
+    }
+
+    .login-link {
+        text-align: center;
+        margin: 20px 0 0;
+        padding-top: 18px;
+        border-top: 1px solid #e9ecef;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .login-link a {
+        color: #0d6efd;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .registration-page {
+            padding: 20px 10px 30px;
+        }
+
+        .registration-header {
+            padding: 20px;
+        }
+
+        .registration-body {
+            padding: 20px;
+        }
+
+        .registration-header h2 {
+            font-size: 21px;
+        }
+    }
+</style>
+
+<div class="registration-page">
+
+    <div class="registration-card">
+
+        <!-- Header -->
+        <div class="registration-header">
+            <div class="registration-header-content">
+
+                <div class="registration-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+
+                <div>
+                    <h2>Student Registration</h2>
+                    <p>Create your Hostel Connect student account</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Form Body -->
+        <div class="registration-body">
+
+            {% if form.errors %}
+                <div class="error-box">
+                    <strong>
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Please correct the errors below
+                    </strong>
+
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Personal Information -->
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
+                    Personal Information
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_first_name" class="form-label">
+                                First Name *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    id="id_first_name"
+                                    class="form-control {% if form.first_name.errors %}is-invalid{% endif %}"
+                                    value="{{ form.first_name.value|default:'' }}"
+                                    placeholder="Enter first name"
+                                    required>
+                            </div>
+
+                            {% if form.first_name.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.first_name.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_last_name" class="form-label">
+                                Last Name *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    id="id_last_name"
+                                    class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                                    value="{{ form.last_name.value|default:'' }}"
+                                    placeholder="Enter last name"
+                                    required>
+                            </div>
+
+                            {% if form.last_name.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.last_name.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Account Information -->
+                <div class="section-title mt-2">
+                    <i class="fas fa-lock"></i>
+                    Account Information
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_username" class="form-label">
+                                Username *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-at input-icon"></i>
+
+                                <input
+                                    type="text"
+                                    name="username"
+                                    id="id_username"
+                                    class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                    value="{{ form.username.value|default:'' }}"
+                                    placeholder="Choose a username"
+                                    required>
+                            </div>
+
+                            <span class="form-help">
+                                Letters, digits and @/./+/-/_ only.
+                            </span>
+
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.username.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_email" class="form-label">
+                                Email *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="id_email"
+                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                    value="{{ form.email.value|default:'' }}"
+                                    placeholder="Enter email address"
+                                    required>
+                            </div>
+
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.email.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_password1" class="form-label">
+                                Password *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-key input-icon"></i>
+
+                                <input
+                                    type="password"
+                                    name="password1"
+                                    id="id_password1"
+                                    class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                    placeholder="Create a password"
+                                    required>
+                            </div>
+
+                            <span class="form-help">
+                                Minimum 8 characters.
+                            </span>
+
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.password1.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_password2" class="form-label">
+                                Confirm Password *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-check-circle input-icon"></i>
+
+                                <input
+                                    type="password"
+                                    name="password2"
+                                    id="id_password2"
+                                    class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                    placeholder="Confirm your password"
+                                    required>
+                            </div>
+
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.password2.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Student Information -->
+                <div class="section-title mt-2">
+                    <i class="fas fa-id-card"></i>
+                    Student Information
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_student_id" class="form-label">
+                                Student ID *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-id-badge input-icon"></i>
+
+                                <input
+                                    type="text"
+                                    name="student_id"
+                                    id="id_student_id"
+                                    class="form-control {% if form.student_id.errors %}is-invalid{% endif %}"
+                                    value="{{ form.student_id.value|default:'' }}"
+                                    placeholder="Enter student ID"
+                                    required>
+                            </div>
+
+                            {% if form.student_id.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.student_id.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                            <label for="id_phone" class="form-label">
+                                Phone *
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone input-icon"></i>
+
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    id="id_phone"
+                                    class="form-control {% if form.phone.errors %}is-invalid{% endif %}"
+                                    value="{{ form.phone.value|default:'' }}"
+                                    placeholder="Enter phone number"
+                                    required>
+                            </div>
+
+                            {% if form.phone.errors %}
+                                <div class="invalid-feedback">
+                                    {{ form.phone.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="id_parent_phone" class="form-label">
+                        Parent / Guardian Phone *
+                    </label>
+
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone-alt input-icon"></i>
+
+                        <input
+                            type="text"
+                            name="parent_phone"
+                            id="id_parent_phone"
+                            class="form-control {% if form.parent_phone.errors %}is-invalid{% endif %}"
+                            value="{{ form.parent_phone.value|default:'' }}"
+                            placeholder="Enter parent or guardian phone number"
+                            required>
+                    </div>
+
+                    {% if form.parent_phone.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.parent_phone.errors.0 }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Address -->
+                <div class="section-title mt-2">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Contact Address
+                </div>
+
+                <div class="form-group">
+
+                    <label for="id_address" class="form-label">
+                        Address *
+                    </label>
+
+                    <div class="input-wrapper">
+                        <i class="fas fa-home input-icon"></i>
+
+                        <textarea
+                            name="address"
+                            id="id_address"
+                            class="form-control {% if form.address.errors %}is-invalid{% endif %}"
+                            placeholder="Enter your complete address"
+                            rows="3"
+                            required>{{ form.address.value|default:'' }}</textarea>
+                    </div>
+
+                    {% if form.address.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.address.errors.0 }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Submit -->
+                <button type="submit" class="register-button">
+                    <i class="fas fa-user-plus me-2"></i>
+                    Create Student Account
+                </button>
+
+            </form>
+
+            <div class="login-link">
+                Already have an account?
+                <a href="{% url 'login' %}">Login here</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

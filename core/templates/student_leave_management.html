@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Leave Management - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+    <div class="container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-plane-departure"></i>
+                Leave Management
+            </h1>
+            <p>Apply for leave and track your requests</p>
+        </div>
+
+        <div class="row">
+
+            <!-- APPLY FOR LEAVE -->
+            <div class="col-md-4">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-plus"></i>
+                            Apply for Leave
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <!-- Start Date -->
+                            <div class="form-group">
+                                <label for="{{ form.start_date.id_for_label }}">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Start Date
+                                </label>
+
+                                {{ form.start_date }}
+
+                                {% if form.start_date.errors %}
+                                    <div class="text-danger">
+                                        {{ form.start_date.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- End Date -->
+                            <div class="form-group">
+                                <label for="{{ form.end_date.id_for_label }}">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    End Date
+                                </label>
+
+                                {{ form.end_date }}
+
+                                {% if form.end_date.errors %}
+                                    <div class="text-danger">
+                                        {{ form.end_date.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="form-group">
+                                <label for="{{ form.reason.id_for_label }}">
+                                    <i class="fas fa-comment"></i>
+                                    Reason
+                                </label>
+
+                                {{ form.reason }}
+
+                                {% if form.reason.errors %}
+                                    <div class="text-danger">
+                                        {{ form.reason.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Non-field errors -->
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <!-- Submit -->
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Leave Request
+                            </button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- LEAVE REQUEST LIST -->
+            <div class="col-md-8">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>
+                            <i class="fas fa-list"></i>
+                            Your Leave Requests
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Submitted Date</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for leave in leave_requests %}
+
+                                    <tr>
+
+                                        <!-- Start Date -->
+                                        <td>
+                                            {{ leave.start_date|date:"M d, Y" }}
+                                        </td>
+
+                                        <!-- End Date -->
+                                        <td>
+                                            {{ leave.end_date|date:"M d, Y" }}
+                                        </td>
+
+                                        <!-- Reason -->
+                                        <td>
+                                            {{ leave.reason }}
+                                        </td>
+
+                                        <!-- Status -->
+                                        <td>
+
+                                            {% if leave.status == 'pending' %}
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-clock"></i>
+                                                    Pending
+                                                </span>
+
+                                            {% elif leave.status == 'approved' %}
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check"></i>
+                                                    Approved
+                                                </span>
+
+                                            {% elif leave.status == 'rejected' %}
+                                                <span class="badge badge-danger">
+                                                    <i class="fas fa-times"></i>
+                                                    Rejected
+                                                </span>
+
+                                            {% else %}
+                                                <span class="badge badge-secondary">
+                                                    {{ leave.status|title }}
+                                                </span>
+                                            {% endif %}
+
+                                        </td>
+
+                                        <!-- Created Date -->
+                                        <td>
+                                            {{ leave.created_at|date:"M d, Y, h:i A" }}
+                                        </td>
+
+                                    </tr>
+
+                                    {% empty %}
+
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <i class="fas fa-info-circle"></i>
+                                            No leave requests submitted yet.
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,405 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .profile-page {
+        padding: 35px 15px;
+    }
+
+    .profile-header {
+        margin-bottom: 30px;
+    }
+
+    .profile-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .profile-header p {
+        color: #64748b;
+        margin: 0;
+    }
+
+    .profile-card,
+    .edit-profile-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .profile-card {
+        text-align: center;
+        padding: 30px 22px;
+    }
+
+    .profile-image {
+        margin-bottom: 20px;
+    }
+
+    .profile-image img,
+    .avatar-placeholder {
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #dbeafe;
+    }
+
+    .avatar-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 80px;
+    }
+
+    .profile-info h3 {
+        color: #0f172a;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-info p {
+        text-align: left;
+        color: #475569;
+        font-size: 14px;
+        padding: 11px 0;
+        margin: 0;
+        border-bottom: 1px solid #f1f5f9;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-info p:last-child {
+        border-bottom: none;
+    }
+
+    .profile-info p i {
+        width: 23px;
+        color: #2563eb;
+    }
+
+    .edit-profile-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .edit-profile-header h3 {
+        font-size: 19px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .edit-profile-body {
+        padding: 25px;
+    }
+
+    .profile-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .profile-form-group {
+        margin-bottom: 4px;
+        min-width: 0;
+    }
+
+    .profile-form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .profile-form-group label {
+        display: block;
+        color: #334155;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .profile-form-group label i {
+        color: #2563eb;
+        margin-right: 5px;
+    }
+
+    .profile-form-group input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    .profile-form-group select,
+    .profile-form-group textarea {
+        display: block;
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        color: #1e293b;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .profile-form-group input:focus,
+    .profile-form-group select:focus,
+    .profile-form-group textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    .profile-form-group input[type="file"] {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        font-size: 13px;
+    }
+
+    .profile-form-group textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    .profile-save-btn {
+        border: none;
+        border-radius: 8px;
+        padding: 12px 22px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .profile-save-btn:hover {
+        background: #1d4ed8;
+    }
+
+    .profile-cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 20px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #334155;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .profile-cancel-btn:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+        text-decoration: none;
+    }
+
+    .profile-error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    @media (max-width: 767px) {
+        .profile-page {
+            padding: 22px 10px;
+        }
+
+        .profile-form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-form-group.full-width {
+            grid-column: auto;
+        }
+
+        .edit-profile-body {
+            padding: 18px;
+        }
+    }
+</style>
+
+<div class="profile-page">
+    <div class="container">
+        <div class="profile-header">
+            <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+            <p>View and update your personal information.</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-card">
+                    <div class="profile-image">
+                        {% if profile and profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile Photo">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-info">
+                        <h3>{{ user.get_full_name|default:user.username }}</h3>
+
+                        <p>
+                            <i class="fas fa-id-card"></i>
+                            <strong>Student ID:</strong>
+                            {{ profile.student_id|default:"Not set" }}
+                        </p>
+
+                        <p>
+                            <i class="fas fa-envelope"></i>
+                            <strong>Email:</strong>
+                            {{ user.email|default:"Not set" }}
+                        </p>
+
+                        <p>
+                            <i class="fas fa-phone"></i>
+                            <strong>Phone:</strong>
+                            {{ profile.phone|default:"Not set" }}
+                        </p>
+
+                        <p>
+                            <i class="fas fa-bed"></i>
+                            <strong>Room:</strong>
+                            {% if profile.room %}
+                                {{ profile.room.block.name }} - Room {{ profile.room.room_number }}
+                            {% else %}
+                                Not Allocated
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="edit-profile-card">
+                    <div class="edit-profile-header">
+                        <h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
+                    </div>
+
+                    <div class="edit-profile-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="profile-form-grid">
+                                <div class="profile-form-group">
+                                    <label for="{{ form.phone.id_for_label }}">
+                                        <i class="fas fa-phone"></i> Phone Number
+                                    </label>
+                                    {{ form.phone }}
+                                    {% for error in form.phone.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group">
+                                    <label for="{{ form.emergency_contact.id_for_label }}">
+                                        <i class="fas fa-phone-alt"></i> Emergency Contact
+                                    </label>
+                                    {{ form.emergency_contact }}
+                                    {% for error in form.emergency_contact.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group">
+                                    <label for="{{ form.emergency_contact_name.id_for_label }}">
+                                        <i class="fas fa-user"></i> Emergency Contact Name
+                                    </label>
+                                    {{ form.emergency_contact_name }}
+                                    {% for error in form.emergency_contact_name.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group">
+                                    <label for="{{ form.date_of_birth.id_for_label }}">
+                                        <i class="fas fa-calendar"></i> Date of Birth
+                                    </label>
+                                    {{ form.date_of_birth }}
+                                    {% for error in form.date_of_birth.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group">
+                                    <label for="{{ form.gender.id_for_label }}">
+                                        <i class="fas fa-venus-mars"></i> Gender
+                                    </label>
+                                    {{ form.gender }}
+                                    {% for error in form.gender.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group full-width">
+                                    <label for="{{ form.address.id_for_label }}">
+                                        <i class="fas fa-map-marker-alt"></i> Address
+                                    </label>
+                                    {{ form.address }}
+                                    {% for error in form.address.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="profile-form-group full-width">
+                                    <label for="{{ form.profile_picture.id_for_label }}">
+                                        <i class="fas fa-image"></i> Profile Picture
+                                    </label>
+                                    {{ form.profile_picture }}
+                                    {% for error in form.profile_picture.errors %}
+                                        <div class="profile-error">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="profile-actions">
+                                <button type="submit" class="profile-save-btn">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+
+                                <a href="{% url 'dashboard' %}" class="profile-cancel-btn">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

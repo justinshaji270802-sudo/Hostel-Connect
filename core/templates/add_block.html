@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Block - Hostel Connect{% endblock %}
+
+{% block content %}
+
+<style>
+    .add-block-page {
+        padding: 40px 15px;
+    }
+
+    .add-block-header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .add-block-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #1e2a3a;
+        letter-spacing: -0.3px;
+    }
+
+    .add-block-header p {
+        color: #6b7a8f;
+        margin-bottom: 0;
+        font-size: 15px;
+    }
+
+    /* —— Card —— */
+    .add-block-card {
+        max-width: 520px;
+        width: 100%;
+        margin: 0 auto;
+        border: 1px solid #e0e5ec;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 8px 28px rgba(0, 20, 50, 0.06);
+    }
+
+    .add-block-card-header {
+        padding: 18px 26px;
+        border-bottom: 1px solid #e0e5ec;
+        background: #f7f9fc;
+    }
+
+    .add-block-card-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e2a3a;
+        letter-spacing: -0.2px;
+    }
+
+    .add-block-card-body {
+        padding: 28px 26px;
+    }
+
+    /* —— Form fields —— */
+    .add-block-form .form-group {
+        margin-bottom: 20px;
+    }
+
+    .add-block-form label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #2c3a4b;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+    }
+
+    .add-block-form input,
+    .add-block-form select,
+    .add-block-form textarea {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-height: 44px;
+        padding: 10px 14px;
+        border: 1px solid #cfd7e2;
+        border-radius: 8px;
+        background-color: #ffffff;
+        color: #1e2a3a;
+        font-size: 14px;
+        box-sizing: border-box;
+        box-shadow: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Remove the placeholder for specific fields */
+    .add-block-form input[name="location"]::placeholder,
+    .add-block-form input[name="warden_name"]::placeholder,
+    .add-block-form input[name="warden_number"]::placeholder {
+        color: transparent !important;
+        opacity: 0 !important;
+    }
+
+    .add-block-form input[name="location"],
+    .add-block-form input[name="warden_name"],
+    .add-block-form input[name="warden_number"] {
+        color: #1e2a3a !important;
+        opacity: 1 !important;
+        -webkit-text-fill-color: #1e2a3a !important;
+    }
+
+    .add-block-form input:focus,
+    .add-block-form select:focus,
+    .add-block-form textarea:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    .add-block-form .form-text {
+        font-size: 12px;
+        color: #7b8a9e;
+    }
+
+    .add-block-form .text-danger {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #d93a3a;
+        font-weight: 500;
+    }
+
+    /* —— Buttons —— */
+    .add-block-submit,
+    .add-block-back {
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        box-sizing: border-box;
+        transition: background 0.15s ease, border-color 0.15s ease;
+        letter-spacing: 0.2px;
+    }
+
+    .add-block-submit {
+        border: none;
+        background: #1e2a3a;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .add-block-submit:hover {
+        background: #111b28;
+    }
+
+    .add-block-back {
+        margin-top: 10px;
+        border: 1px solid #cfd7e2;
+        background: #ffffff;
+        color: #2c3a4b;
+    }
+
+    .add-block-back:hover {
+        background: #f2f5f9;
+        color: #1e2a3a;
+        border-color: #b3c0d1;
+    }
+
+    /* —— Alert —— */
+    .add-block-form .alert-danger {
+        border-radius: 8px;
+        font-size: 13px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c2c7;
+        background: #fef2f3;
+        color: #a12b32;
+    }
+
+    /* —— Mobile —— */
+    @media (max-width: 576px) {
+        .add-block-page {
+            padding: 28px 12px;
+        }
+
+        .add-block-header h1 {
+            font-size: 22px;
+        }
+
+        .add-block-header p {
+            font-size: 14px;
+        }
+
+        .add-block-card-body {
+            padding: 20px 18px;
+        }
+
+        .add-block-card-header {
+            padding: 15px 18px;
+        }
+
+        .add-block-form label {
+            font-size: 12px;
+        }
+
+        .add-block-form input,
+        .add-block-form select,
+        .add-block-form textarea {
+            min-height: 42px;
+            font-size: 13px;
+            padding: 9px 12px;
+        }
+
+        .add-block-submit,
+        .add-block-back {
+            font-size: 13px;
+            padding: 11px 14px;
+        }
+    }
+</style>
+
+<div class="page-container add-block-page">
+    <div class="container">
+
+        <div class="add-block-header">
+            <h1>
+                <i class="fas fa-building"></i>
+                Add Hostel Block
+            </h1>
+            <p>Create a block and enter its details.</p>
+        </div>
+
+        <div class="add-block-card">
+
+            <div class="add-block-card-header">
+                <h3>Block Details</h3>
+            </div>
+
+            <div class="add-block-card-body">
+
+                <form method="POST" class="add-block-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="form-group">
+
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <small class="text-danger">
+                                    {{ error }}
+                                </small>
+                            {% endfor %}
+
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="add-block-submit">
+                        <i class="fas fa-plus"></i>
+                        Add Block
+                    </button>
+
+                    <a href="{% url 'hostel_rooms_blocks' %}"
+                       class="add-block-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Hostel Rooms &amp; Blocks
+                    </a>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
